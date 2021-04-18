@@ -4,7 +4,6 @@
 body{
   overflow-x: hidden;
   overflow-y: auto;
-  margin-top:20px;
 }
 .title{
   background-color: #4d95aa;
@@ -36,7 +35,7 @@ body{
 .screen{
   display: flex;
   justify-content: center;
-  margin:15px 0px;
+  margin:10px 0px;
 }
 .header{
   text-align: center;
@@ -52,6 +51,9 @@ body{
 }
 textarea{
   font-size:16px;
+}
+#MainScreen{
+  display:inline;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
