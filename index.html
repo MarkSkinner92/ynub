@@ -10,27 +10,25 @@
   </head>
   <body>
     <h1 class="title">YNUB Personal Finance</h1>
-    <div class='addExpence'>
+    <div class='screen'>
+      <button id='inout'onclick='toggleInOut()'class = 'inout'>+</button>
       <input type='number'class='expenseField' placeholder="$0.00"></input>
-      <button class = 'submitExpense'>Add Expense</button>
     </div>
     <hr>
-    <div class="categories">
-      <div class='category'>
-        <p class='c-text'>Some really long topic</p>
-      </div>
-      <div class='category'>
-        <p class='c-text'>Piano</p>
-      </div>
-      <div class='category'>
-        <p class='c-text'>Food / Grocries</p>
-      </div>
-      <div class='category'>
-        <p class='c-text'>Food / Grocries</p>
-      </div>
-      <div class='category'>
-        <p class='c-text'>Food / Grocries</p>
-      </div>
+    <p class='header'>Category</p>
+    <div class='screen'>
+      <button id='inout'onclick='getCategory()'class = 'button'>Single</button>
+      <button id='inout'onclick='getCategory()'class = 'button'>Split ✂️</button>
+    </div>
+    <hr>
+    <p class='header'>Date</p>
+    <div class='screen'>
+      <input type='date'/>
+    </div>
+    <hr>
+    <p class='header'>Memo</p>
+    <div class='screen'>
+      <textarea style='width:100%;height:80px;resize: none'></textarea>
     </div>
     <script src='main.js' charset='utf-8'></script>
   </body>

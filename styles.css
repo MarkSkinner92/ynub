@@ -13,6 +13,7 @@ body{
   padding: 10px;
   margin:0px;
   color:white;
+  margin-bottom: 20px;
 }
 .expenseField{
   width:150px;
@@ -20,39 +21,34 @@ body{
   font-size: 20px;
   text-align: center;
   border: 1px solid;
-  margin-right:10px;
+  margin-left:10px;
 }
-.submitExpense{
+.inout{
   color:white;
   font-size:20px;
+  width:50px;
   background: #4eaa4d;
   border:none;
   cursor:pointer;
+  transition: all 0.5s;
+  border-radius: 5px;
 }
-.submitExpense:hover{
-  filter:brightness(85%);
-}
-.addExpence{
+.screen{
   display: flex;
   justify-content: center;
-  margin:20px 0px;
+  margin:15px 0px;
 }
-.categories{
-  margin: 20px 0px;
-  background: #FFF;
-}
-.category{
-  display: inline-block;
-  border:solid 2px;
-  /* width:90px;
-  height:90px; */
-  padding: 15px;
-  background: #f2f2f2;
-  margin-top:8px;
-  margin-left:5px;
-}
-.c-text{
+.header{
+  text-align: center;
   margin:0px;
+}
+.button{
+  height:50px;
+  background:beige;
+  border:none;
+  width:160px;
+  margin: 0px 10px;
+  font-size: 16px;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
