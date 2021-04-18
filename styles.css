@@ -1,0 +1,64 @@
+*{
+  font-family: 'Poppins', sans-serif;
+}
+body{
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-top:20px;
+}
+.title{
+  background-color: #4d95aa;
+  text-align: center;
+  font-size: 25px;
+  padding: 10px;
+  margin:0px;
+  color:white;
+}
+.expenseField{
+  width:150px;
+  height:30px;
+  font-size: 20px;
+  text-align: center;
+  border: 1px solid;
+  margin-right:10px;
+}
+.submitExpense{
+  color:white;
+  font-size:20px;
+  background: #4eaa4d;
+  border:none;
+  cursor:pointer;
+}
+.submitExpense:hover{
+  filter:brightness(85%);
+}
+.addExpence{
+  display: flex;
+  justify-content: center;
+  margin:20px 0px;
+}
+.categories{
+  margin: 20px 0px;
+  background: #FFF;
+}
+.category{
+  display: inline-block;
+  border:solid 2px;
+  /* width:90px;
+  height:90px; */
+  padding: 15px;
+  background: #f2f2f2;
+  margin-top:8px;
+  margin-left:5px;
+}
+.c-text{
+  margin:0px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
