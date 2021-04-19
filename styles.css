@@ -14,7 +14,7 @@ body{
   color:white;
   margin-bottom: 20px;
 }
-.expenseField{
+.inputField{
   width:150px;
   height:30px;
   font-size: 20px;
@@ -26,7 +26,7 @@ body{
   color:white;
   font-size:20px;
   width:50px;
-  background: #4eaa4d;
+  background: #c00;
   border:none;
   cursor:pointer;
   transition: all 0.5s;
@@ -35,7 +35,7 @@ body{
 .screen{
   display: flex;
   justify-content: center;
-  margin:10px 0px;
+  margin:5px 0px;
 }
 .header{
   text-align: center;
@@ -49,11 +49,78 @@ body{
   margin: 0px 10px;
   font-size: 16px;
 }
+.backbutton{
+  height:25px;
+  background:beige;
+  border:none;
+  width:80px;
+  margin: 0px;
+  margin-bottom:8px;
+  font-size: 16px;
+}
+.single-cats{
+  overflow-x: none;
+  overflow-y: auto;
+}
+.single-cat{
+  display:none;
+  border:2px solid black;
+  padding: 10px;
+  margin:5px;
+}
+.cat-p{
+  margin: 0px;
+}
+.split-cats{
+  overflow-x: none;
+  overflow-y: auto;
+}
+.split-cat{
+  display:none;
+  border:2px solid black;
+  padding: 10px;
+  margin:5px;
+}
+.split-final-cats{
+  overflow-x: none;
+  overflow-y: auto;
+}
+.split-final-cat{
+  display:none;
+  border:2px solid black;
+  padding: 10px;
+  margin:5px;
+  width:calc(100% - 30px);
+}
+.split-cat[data-checked='true']{
+  background-color: aqua;
+}
+#overlay-text{
+  color: black;
+  position: fixed;
+  top: 20px;
+  left: calc(10% - 5px);
+  background: whitesmoke;
+  width: 80%;
+  padding-left: 5px;
+}
 textarea{
   font-size:16px;
 }
 #MainScreen{
   display:inline;
+}
+#SingleCategory{
+  display:none;
+}
+#SplitCategories{
+  display:none;
+}
+#Payees{
+  display:none;
+}
+#Splits{
+  display:none;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
