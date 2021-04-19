@@ -29,7 +29,6 @@ body{
   background: #c00;
   border:none;
   cursor:pointer;
-  transition: all 0.5s;
   border-radius: 5px;
 }
 .screen{
@@ -48,12 +47,13 @@ body{
   width:160px;
   margin: 0px 10px;
   font-size: 16px;
+  overflow:hidden;
 }
 .backbutton{
   height:25px;
   background:beige;
   border:none;
-  width:80px;
+  width:100px;
   margin: 0px;
   margin-bottom:8px;
   font-size: 16px;
@@ -62,7 +62,7 @@ body{
   overflow-x: none;
   overflow-y: auto;
 }
-.single-cat{
+.single-payee,.single-cat{
   display:none;
   border:2px solid black;
   padding: 10px;
@@ -98,7 +98,7 @@ body{
 #overlay-text{
   color: black;
   position: fixed;
-  top: 20px;
+  bottom: 80px;
   left: calc(10% - 5px);
   background: whitesmoke;
   width: 80%;

@@ -18,18 +18,18 @@
       <hr>
       <p class='header'>Category</p>
       <div class='screen'>
-        <button onclick='setScreen(1)'class = 'button'>Single ></button>
+        <button id='singleCatButton' onclick='setScreen(1)'class = 'button'>Single ></button>
         <button onclick='setScreen(2)'class = 'button'>Split ✂️</button>
       </div>
       <hr>
       <p class='header'>Payee</p>
       <div class='screen'>
-        <button onclick='setScreen(3)'class = 'button'>Select Payee ></button>
+        <button id='payeeButton' onclick='setScreen(3)'class = 'button'>Select Payee ></button>
       </div>
       <hr>
       <p class='header'>Date</p>
       <div class='screen'>
-        <input type='date'/>
+        <input type='date' id='date'/>
       </div>
       <hr>
       <p class='header'>Memo</p>
@@ -42,7 +42,7 @@
     </div>
     <div id='SingleCategory'>
       <button onclick="setScreen(0)"class='backbutton'>< Back</button>
-      <input class='inputField'style='margin: 0px;width:calc(100% - 10px)' placeholder="Search for category"></input>
+      <input onkeyup="searchForSingle(this)"class='inputField'style='margin: 0px;width:calc(100% - 10px)' placeholder="Search for category"></input>
       <hr>
       <div id='single-cats'>
         <div id='single-cat' onclick='clickSingleCat(this)'class='single-cat'>
@@ -53,7 +53,7 @@
     <div id='SplitCategories'>
       <button onclick="setScreen(0)"class='backbutton'>< Back</button>
       <button onclick="setScreen(4)"style='float:right;background:darkorange'class='backbutton'>Next ></button>
-      <input class='inputField'style='margin: 0px;width:calc(100% - 10px)' placeholder="Search for categories"></input>
+      <input onkeyup="searchForCat(this)"class='inputField'style='margin: 0px;width:calc(100% - 10px)' placeholder="Search for categories"></input>
       <hr>
       <div id='split-cats'>
         <div id='split-cat' onclick='checkSplitCat(this)'data-checked='false' class='split-cat'>
@@ -63,14 +63,14 @@
     </div>
     <div id='Payees'>
       <button onclick="setScreen(0)"class='backbutton'>< Back</button>
-      <input class='inputField'style='margin: 0px;width:calc(100% - 10px)' placeholder="Search for Payee"></input>
+      <input onkeyup='searchForPayee(this)'class='inputField'style='margin: 0px;width:calc(100% - 10px)' placeholder="Search for Payee"></input>
       <hr>
-      <div id='single-cats'>
-        <div id='single-cat' class='single-cat'>
+      <div onclick='choosePayee(this)'style='display:inline-block'id='payee-addition' class='single-cat' style='background:lightcoral'>
+        <p class="cat-p"></p>
+      </div>
+      <div id='split-final-payees'>
+        <div onclick='choosePayee(this)'id='single-payee' class='single-payee'>
           <p class="cat-p">Walmart</p>
-        </div>
-        <div id='single-cat' class='single-cat' style='background:lightcoral'>
-          <p class="cat-p">+ Add "Something"</p>
         </div>
       </div>
     </div>
@@ -82,7 +82,7 @@
         <div data-checked='false' data-value='0' id='split-final-cat' class='split-final-cat'>
           <p class="cat-p">Multiple cat's hereMultiple cat's hereMultiple cat's hereMultiple cat's hereMultiple cat's hereMultiple cat's here</p>
           <button style='float:left'onclick="change(this)" id='_inout'onclick='toggleInOut()'class = 'inout'>-</button>
-          <input onchange='changeValue(this)'style='float:right'id='partialAmount'pattern="[0-9]*" type='number'class='inputField' placeholder="$0.00"></input>
+          <input onkeyup='changeValue(this)' onchange='changeValue(this)'style='float:right'id='partialAmount'pattern="[0-9]*" type='number'class='inputField' placeholder="$0.00"></input>
         </div>
       </div>
       <p id='overlay-text'>Total: $0, Remaining: $0</p>
