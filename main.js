@@ -8,13 +8,21 @@ var singleClone = document.getElementById('single-cat'),
     splitsClone = document.getElementById('split-cat'),
     splitsFinalClone = document.getElementById('split-final-cat'),
     payeeFinalClone = document.getElementById('single-payee');
-var formdata = {};
+var formdata = {categories:[]};
 var catsGenerated = false;
 var mainInflow = false;
 
-
-var categories = ['wow wow wow this is  at weawd awef wow wow wow this is  at weawd awef wow wow wow this is  at weawd awef wow wow wow this is  at weawd awef wow wow wow this is  at weawd awef ','b','c','1','2','3'];
-var payees = ['Safeway','walmart','McDonalds'];
+var categories = [];
+var payees = [];
+var today = new Date();
+let todayDateFormated = (`${today.getFullYear()}-${today.getMonth().toLocaleString('en-US', {
+    minimumIntegerDigits: 2,
+    useGrouping: false
+  })}-${today.getDate().toLocaleString('en-US', {
+    minimumIntegerDigits: 2,
+    useGrouping: false
+  })}`);
+document.getElementById("date").value = todayDateFormated;
 window.screens = [document.getElementById('MainScreen'),document.getElementById('SingleCategory'),document.getElementById('SplitCategories'),document.getElementById('Payees'),document.getElementById('Splits')];
 function toggleInOut(){
   if(mainInflow){
@@ -69,6 +77,8 @@ function calculateCategories(){
       formdata.categories.push({name:c[i].querySelector('.cat-p').innerText, amount: cost, inflow:c[i].getAttribute('data-checked')=='true'});
     }
   }
+  document.getElementById('splitCatButton').innerText = `Split (${formdata.categories.length})`;
+  document.getElementById('singleCatButton').innerText = `Single >`;
 }
 function generateCategories(){
   catsGenerated = true;
@@ -161,6 +171,7 @@ function clickSingleCat(t){
   setScreen(0);
   formdata.categories = [{name:t.querySelector('.cat-p').innerText, amount: getFullAmount()}];
   document.getElementById('singleCatButton').innerText = formdata.categories[0].name;
+  document.getElementById('splitCatButton').innerText = 'Split ✂️';
 }
 function getActiveSplits(){
   let c = document.getElementsByClassName('split-cat');
@@ -193,13 +204,36 @@ function searchElements(a,b){
   }
 }
 function submit(){
-  if(formdata.categories && getFullAmount() != 0 && formdata.payee){
+  if(formdata.categories.length > 0 && getFullAmount() != 0 && formdata.payee && gapi.auth2.getAuthInstance().isSignedIn.get()){
     if(formdata.categories.length == 1){
       formdata.categories[0].amount = getFullAmount();
       formdata.categories[0].inflow = mainInflow;
     }
     formdata.memo = document.getElementById('memo').value;
     formdata.date = document.getElementById('date').value;
-    console.log(formdata);
+    submitToSheet();
   }
+}
+function submitToSheet(){
+  if(!payees.includes(formdata.payee)){
+    addPayee(formdata.payee);
+  }
+  let dates = document.getElementById('date').value.split('-');
+  var date = ([ "January", "February", "March", "April", "May", "June",
+"July", "August", "September", "October", "November", "December" ][parseInt(dates[1])]+' ' + parseInt(dates[2]) + ", " + dates[0]);
+
+  var trans = [];
+  for(let i = 0; i < formdata.categories.length; i++){
+    console.log(formdata.categories);
+    var inflow =  formdata.categories[i].amount;
+    var outflow = formdata.categories[i].amount;
+    if(formdata.categories[i].inflow){
+      outflow = '';
+    }else{
+      inflow = '';
+    }
+    trans.push([date,formdata.payee,formdata.categories[i].name,formdata.memo,outflow,inflow]);
+  }
+  console.log(trans);
+  addRows('Transactions!A:A',trans);
 }

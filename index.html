@@ -15,28 +15,30 @@
         <button onchange="ppchange()" id='inout'onclick='toggleInOut()'class = 'inout'>-</button>
         <input id='fullAmount'pattern="[0-9]*" type='number'class='inputField' placeholder="$0.00"></input>
       </div>
-      <hr>
+      <!-- <hr> -->
       <p class='header'>Category</p>
       <div class='screen'>
         <button id='singleCatButton' onclick='setScreen(1)'class = 'button'>Single ></button>
-        <button onclick='setScreen(2)'class = 'button'>Split ✂️</button>
+        <button id='splitCatButton'onclick='setScreen(2)'class = 'button'>Split ✂️</button>
       </div>
-      <hr>
+      <!-- <hr> -->
       <p class='header'>Payee</p>
       <div class='screen'>
         <button id='payeeButton' onclick='setScreen(3)'class = 'button'>Select Payee ></button>
       </div>
-      <hr>
+      <!-- <hr> -->
       <p class='header'>Date</p>
       <div class='screen'>
         <input type='date' id='date'/>
       </div>
-      <hr>
+      <!-- <hr> -->
       <p class='header'>Memo</p>
       <div class='screen'>
         <textarea id='memo'style='width:100%;height:50px;resize: none'></textarea>
       </div>
       <div class='screen'>
+        <button id="authorize_button" style="display: none;"class = 'button'>Authorize</button>
+        <button id="signout_button" style="display: none;"class = 'button'>Sign Out</button>
         <button style='background:darkorange'onclick='submit()'class = 'button'>Submit</button>
       </div>
     </div>
@@ -78,6 +80,7 @@
       <button onclick="setScreen(2)"class='backbutton'>< Back</button>
       <button onclick="setScreen(5)"style='float:right;background:darkorange'class='backbutton'>Next ></button>
       <hr>
+      <p id='overlay-text'>Total: $0, Remaining: $0</p>
       <div id='split-final-cats'>
         <div data-checked='false' data-value='0' id='split-final-cat' class='split-final-cat'>
           <p class="cat-p">Multiple cat's hereMultiple cat's hereMultiple cat's hereMultiple cat's hereMultiple cat's hereMultiple cat's here</p>
@@ -85,8 +88,12 @@
           <input onkeyup='changeValue(this)' onchange='changeValue(this)'style='float:right'id='partialAmount'pattern="[0-9]*" type='number'class='inputField' placeholder="$0.00"></input>
         </div>
       </div>
-      <p id='overlay-text'>Total: $0, Remaining: $0</p>
     </div>
     <script src='main.js' charset='utf-8'></script>
+    <script src='gsheets.js' charset='utf-8'></script>
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
   </body>
 </html>
