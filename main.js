@@ -15,7 +15,7 @@ var mainInflow = false;
 var categories = [];
 var payees = [];
 var today = new Date();
-let todayDateFormated = (`${today.getFullYear()}-${today.getMonth().toLocaleString('en-US', {
+let todayDateFormated = (`${today.getFullYear()}-${(today.getMonth()+1).toLocaleString('en-US', {
     minimumIntegerDigits: 2,
     useGrouping: false
   })}-${today.getDate().toLocaleString('en-US', {
@@ -203,7 +203,7 @@ function searchElements(a,b){
     else a[i].style.display = 'none';
   }
 }
-function submit(){
+function submit(t){
   if(formdata.categories.length > 0 && getFullAmount() != 0 && formdata.payee && gapi.auth2.getAuthInstance().isSignedIn.get()){
     if(formdata.categories.length == 1){
       formdata.categories[0].amount = getFullAmount();
@@ -212,15 +212,17 @@ function submit(){
     formdata.memo = document.getElementById('memo').value;
     formdata.date = document.getElementById('date').value;
     submitToSheet();
+    t.remove();
   }
 }
+var state = false;
 function submitToSheet(){
   if(!payees.includes(formdata.payee)){
-    addPayee(formdata.payee);
+    state |= addPayee(formdata.payee);
   }
   let dates = document.getElementById('date').value.split('-');
   var date = ([ "January", "February", "March", "April", "May", "June",
-"July", "August", "September", "October", "November", "December" ][parseInt(dates[1])]+' ' + parseInt(dates[2]) + ", " + dates[0]);
+"July", "August", "September", "October", "November", "December" ][parseInt(dates[1])-1]+' ' + parseInt(dates[2]) + ", " + dates[0]);
 
   var trans = [];
   for(let i = 0; i < formdata.categories.length; i++){
@@ -233,7 +235,8 @@ function submitToSheet(){
       inflow = '';
     }
     trans.push([date,formdata.payee,formdata.categories[i].name,formdata.memo,outflow,inflow]);
+
   }
   console.log(trans);
-  addRows('Transactions!A:A',trans);
+  state |= addRows('Transactions!A:A',trans,true);
 }

@@ -13,7 +13,7 @@
       <h1 class="title">YNUB Personal Finance</h1>
       <div class='screen'>
         <button onchange="ppchange()" id='inout'onclick='toggleInOut()'class = 'inout'>-</button>
-        <input id='fullAmount'pattern="[0-9]*" type='number'class='inputField' placeholder="$0.00"></input>
+        <input id='fullAmount'pattern="[0-9].*" type='number'class='inputField' placeholder="$0.00"></input>
       </div>
       <!-- <hr> -->
       <p class='header'>Category</p>
@@ -39,7 +39,7 @@
       <div class='screen'>
         <button id="authorize_button" style="display: none;"class = 'button'>Authorize</button>
         <button id="signout_button" style="display: none;"class = 'button'>Sign Out</button>
-        <button style='background:darkorange'onclick='submit()'class = 'button'>Submit</button>
+        <button style='background:darkorange'onclick='submit(this)'class = 'button'>Submit</button>
       </div>
     </div>
     <div id='SingleCategory'>
@@ -68,7 +68,7 @@
       <input onkeyup='searchForPayee(this)'class='inputField'style='margin: 0px;width:calc(100% - 10px)' placeholder="Search for Payee"></input>
       <hr>
       <div onclick='choosePayee(this)'style='display:inline-block'id='payee-addition' class='single-cat' style='background:lightcoral'>
-        <p class="cat-p"></p>
+        <p style='margin:0px;'>Create new payee from search: </p><p class="cat-p"></p>
       </div>
       <div id='split-final-payees'>
         <div onclick='choosePayee(this)'id='single-payee' class='single-payee'>
@@ -85,10 +85,11 @@
         <div data-checked='false' data-value='0' id='split-final-cat' class='split-final-cat'>
           <p class="cat-p">Multiple cat's hereMultiple cat's hereMultiple cat's hereMultiple cat's hereMultiple cat's hereMultiple cat's here</p>
           <button style='float:left'onclick="change(this)" id='_inout'onclick='toggleInOut()'class = 'inout'>-</button>
-          <input onkeyup='changeValue(this)' onchange='changeValue(this)'style='float:right'id='partialAmount'pattern="[0-9]*" type='number'class='inputField' placeholder="$0.00"></input>
+          <input onkeyup='changeValue(this)' onchange='changeValue(this)'style='float:right'id='partialAmount'pattern="[0-9.]*" type='number'class='inputField' placeholder="$0.00"></input>
         </div>
       </div>
     </div>
+    <div id='suc'class='suc'><h3 class='suc-text'>Submission successful!</h3><h3 class='suc-text'>Horray for YNUB!</h3></div>
     <script src='main.js' charset='utf-8'></script>
     <script src='gsheets.js' charset='utf-8'></script>
     <script async defer src="https://apis.google.com/js/api.js"

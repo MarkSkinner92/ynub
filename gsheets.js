@@ -74,9 +74,9 @@ function getInitData() {
   });
 }
 function addPayee(value){
-  addRows('Payees!A:A',[[value]]);
+  addRows('Payees!A:A',[[value]],false);
 }
-function addRows(range,values) {
+function addRows(range,values,isfinal) {
      var params = {
        spreadsheetId: SHEET_ID,
        range: range,
@@ -92,6 +92,11 @@ function addRows(range,values) {
      request.then(function(response) {
        // TODO: Change code below to process the `response` object:
        console.log(response.result);
+       state |= true;
+       if(isfinal && state){
+         document.getElementById('suc').style.top='0px';
+         state = false;
+       }
      }, function(reason) {
        console.error('error: ' + reason.result.error.message);
      });
