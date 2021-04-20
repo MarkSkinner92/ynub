@@ -11,7 +11,9 @@ var singleClone = document.getElementById('single-cat'),
 var formdata = {categories:[]};
 var catsGenerated = false;
 var mainInflow = false;
-
+var transactions = [];
+var months = [ "January", "February", "March", "April", "May", "June",
+"July", "August", "September", "October", "November", "December" ];
 var categories = [];
 var payees = [];
 var today = new Date();
@@ -212,17 +214,22 @@ function submit(t){
     formdata.memo = document.getElementById('memo').value;
     formdata.date = document.getElementById('date').value;
     submitToSheet();
-    t.remove();
+    t.style.display = 'none';
   }
 }
 var state = false;
 function submitToSheet(){
   if(!payees.includes(formdata.payee)){
-    state |= addPayee(formdata.payee);
+    let insertIndex = payees.length+1;
+    for(let i = payees.length-1; i >= 0; i--){
+      if(formdata.payee.toLowerCase() < payees[i].toLowerCase()){
+        insertIndex = i+1;
+      }
+    }
+    insertRowAt(insertIndex,[[formdata.payee]],1823492813);
   }
   let dates = document.getElementById('date').value.split('-');
-  var date = ([ "January", "February", "March", "April", "May", "June",
-"July", "August", "September", "October", "November", "December" ][parseInt(dates[1])-1]+' ' + parseInt(dates[2]) + ", " + dates[0]);
+  var date = (months[parseInt(dates[1])-1]+' ' + parseInt(dates[2]) + ", " + dates[0]);
 
   var trans = [];
   for(let i = 0; i < formdata.categories.length; i++){
@@ -238,5 +245,12 @@ function submitToSheet(){
 
   }
   console.log(trans);
-  state |= addRows('Transactions!A:A',trans,true);
+  let insertIndex = transactions.length+4;
+  let uns = convertTime(date);
+  for(let i = transactions.length-1; i >= 0; i--){
+    if(convertTime(date) >= transactions[i]){
+      insertIndex = i+4;
+    }
+  }
+  insertRowAt(insertIndex,trans,1871586694,true);
 }
