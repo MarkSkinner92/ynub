@@ -134,6 +134,7 @@ input[type='date']{
   height:50px;
   background-color: aliceblue;
   border:none;
+  font-size: 17px;
 }
 /* #authorize_button,#signout_button{
   bottom: 5px;
