@@ -34,7 +34,6 @@ function initClient() {
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     authorizeButton.style.display = 'none';
-    signoutButton.style.display = 'block';
     getInitData();
   } else {
     authorizeButton.style.display = 'block';
@@ -56,7 +55,7 @@ function getInitData() {
   }).then(function(response) {
     var range = response.result.values;
     range.forEach((item, i) => {
-      categories.push({itm:item[0],po:item[1]});
+      if(item[0])categories.push({itm:item[0],po:item[1]});
     });
     generateCategories();
   }, function(response) {
@@ -68,7 +67,7 @@ function getInitData() {
   }).then(function(response) {
     var range = response.result.values;
     range.forEach((item, i) => {
-      payees.push({itm:item[0],po:item[1]});
+      if(item[0])payees.push({itm:item[0],po:item[1]});
     });
     generatePayees();
   }, function(response) {
@@ -78,12 +77,12 @@ function getInitData() {
     spreadsheetId: SHEET_ID,
     range: 'Transactions!A4:A',
   }).then(function(response) {
-    var range = response.result.values;
+    let range = response.result.values;
     if(range === undefined) range = [['April 2, 2001']];
     range.forEach((item, i) => {
-      transactions.push(convertTime(item[0]));
+      console.log(item[0]);
+      if(item[0])transactions.push(convertTime(item[0]));
     });
-    console.log(transactions);
   }, function(response) {
     console.log('error' + response);
   });
@@ -133,6 +132,7 @@ function insertRowAt(index,values,sheetIntID,isfinal=false){
      state |= true;
      if(isfinal && state){
        document.getElementById('suc').style.top='0px';
+       signoutButton.style.display = 'block';
        state = false;
      }
    },reason => {

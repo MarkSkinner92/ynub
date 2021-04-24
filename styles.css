@@ -60,6 +60,18 @@ body{
   font-size: 16px;
   overflow:hidden;
 }
+.buttonCantMiss{
+  position: fixed;
+  left: 0px;
+  top: 89px;
+  height: 300px;
+  background-image: linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet);
+  border: none;
+  width: 350px;
+  margin: 0px 10px;
+  font-size: 66px;
+  overflow: hidden;
+}
 .backbutton{
   height:25px;
   background:beige;
