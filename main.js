@@ -12,6 +12,7 @@ var formdata = {categories:[]};
 var catsGenerated = false;
 var mainInflow = false;
 var transactions = [];
+var memCats = [];
 var months = [ "January", "February", "March", "April", "May", "June",
 "July", "August", "September", "October", "November", "December" ];
 var categories = [];
@@ -45,13 +46,23 @@ function setFundOut(){
 }
 function setScreen(s){
   switch(s){
+    case 0:
+    if(getActiveSplits().length == 0){
+      formdata.categories = [];
+      clearSplitButton();
+    }
+    break;
     case 2:
       if(getFullAmount() == 0) return;
-    case 1:
-      if(!catsGenerated) generateCategories();
+      console.log('applying all to memcats');
+      saveToMemcats();
     break;
     case 4:
-      if(getActiveSplits().length == 0) return;
+      if(getActiveSplits().length == 0){
+        formdata.categories = [];
+        clearSplitButton();
+        return;
+      }
       else{
         createFinalSplitElements();
         changeOverlay();
@@ -59,10 +70,8 @@ function setScreen(s){
     break;
     case 5:
       calculateCategories();
+      if(formdata.categories.length == 0) return;
       s = 0;
-    break;
-    case 3:
-      generatePayees();
     break;
   }
   window.screens.forEach((item, i) => {
@@ -71,30 +80,54 @@ function setScreen(s){
   window.screens[s].style.display = 'inline';
 }
 function calculateCategories(){
-  formdata.categories = [];
   let c = document.getElementsByClassName('split-final-cat');
+  formdata.categories = [];
   for(let i = 0; i < c.length; i++){
     let cost = getAm(c[i].getAttribute('data-value'));
     if(c[i].style.display != 'none' && cost != 0){
-      formdata.categories.push({name:c[i].querySelector('.cat-p').innerText, amount: cost, inflow:c[i].getAttribute('data-checked')=='true'});
+      formdata.categories.push({
+        name: c[i].querySelector('.cat-p').innerText,
+        amount: cost,
+        inflow: c[i].getAttribute('data-checked')=='true',
+        gst: c[i].getAttribute('data-gst')=='true',
+        memo: c[i].querySelector('.splitMemo').value
+      });
     }
   }
-  document.getElementById('splitCatButton').innerText = `Split (${formdata.categories.length})`;
+  if(formdata.categories.length > 0) document.getElementById('splitCatButton').innerText = `Split (${formdata.categories.length})`;
+  else clearSplitButton();
   document.getElementById('singleCatButton').innerText = `Single >`;
+}
+function clearSplitButton(){
+  document.getElementById('splitCatButton').innerText = 'Split ✂️';
+}
+function saveToMemcats(){
+  let c = document.getElementsByClassName('split-final-cat');
+  for(let i = 0; i < c.length; i++){
+    let cost = getAm(c[i].getAttribute('data-value'));
+      if(c[i].querySelector('.cat-p').innerText != 'DEMO')
+      memCats[c[i].querySelector('.cat-p').innerText]={
+        name: c[i].querySelector('.cat-p').innerText,
+        amount: cost,
+        inflow: c[i].getAttribute('data-checked')=='true',
+        gst: c[i].getAttribute('data-gst')=='true',
+        memo: c[i].querySelector('.splitMemo').value
+      };
+  }
 }
 function generateCategories(){
   catsGenerated = true;
   singleCont.innerHTML = '';
   splitsCont.innerHTML = '';
   categories.forEach(item => {
-    singleCont.appendChild(createSingleCat(item));
-    splitsCont.appendChild(createSplitCat(item));
+    singleCont.appendChild(createSingleCat(item.itm));
+    splitsCont.appendChild(createSplitCat(item.itm));
   });
 }
 function generatePayees(){
   payCont.innerHTML = '';
   payees.forEach(item => {
-    payCont.appendChild(createPayee(item));
+    payCont.appendChild(createPayee(item.itm));
   });
 }
 function createPayee(item){
@@ -105,22 +138,45 @@ function createPayee(item){
 }
 function choosePayee(t){
   if(t.querySelector('.cat-p').innerText != ''){
-    formdata.payee = t.querySelector('.cat-p').innerText;
-    document.getElementById('payeeButton').innerText = formdata.payee;
+    setPayee(t.querySelector('.cat-p').innerText);
     setScreen(0);
+  }
+}
+function setPayee(text){
+  formdata.payee = text;
+  document.getElementById('payeeButton').innerText = formdata.payee;
+  let g = payees.filter((item) => item.itm == formdata.payee);
+  if(g.length > 0 && formdata.categories.length == 0 && g[0].po){
+    setSingleCat(g[0].po);
+  }
+}
+function toggleGST(t){
+  console.log(t.getAttribute('data-gst'));
+  t.parentElement.setAttribute('data-gst',t.parentElement.getAttribute('data-gst') != 'true');
+  let oldV = Number(t.parentElement.querySelector('#partialAmount').value);
+  if(t.parentElement.getAttribute('data-gst')=='true'){
+    t.style.background = 'cadetblue';
+    t.parentElement.querySelector('#partialAmount').value = (oldV*1.05).toFixed(2);
+    t.parentElement.setAttribute('data-value',(oldV*1.05).toFixed(2));
+  }else{
+    t.style.background = '#ddd';
+    t.parentElement.querySelector('#partialAmount').value = (oldV/1.05).toFixed(2);
+    t.parentElement.setAttribute('data-value',(oldV/1.05).toFixed(2));
   }
 }
 function change(t){
   t.parentElement.setAttribute('data-checked',t.parentElement.getAttribute('data-checked') != 'true');
-  if(t.parentElement.getAttribute('data-checked') == 'true'){
-    t.style.background = '#4eaa4d';
-    t.innerText = '+';
-  }
-  else{
-    t.style.background = '#c00';
-    t.innerText = '-';
-  }
+  setPlusMinusButtonState(t,t.parentElement.getAttribute('data-checked') == 'true');
   changeOverlay();
+}
+function setPlusMinusButtonState(element,t){
+  if(t){
+    element.style.background = '#4eaa4d';
+    element.innerText = '+';
+  }else{
+    element.style.background = '#c00';
+    element.innerText = '-';
+  }
 }
 function changeValue(t){
   t.parentElement.setAttribute('data-value',t.value || 0);
@@ -136,7 +192,8 @@ function changeOverlay(){
     }
   }
   remain -= total;
-  document.getElementById('overlay-text').innerText = `Total: $${total}, Remaining: $${-remain}`;
+  document.getElementById('overlay-text').innerText = `Total: $${total.toFixed(2)}
+Remaining: $${(-remain).toFixed(2)}`;
 }
 function createSplitCat(v){
   let e = splitsClone.cloneNode(true);
@@ -154,7 +211,27 @@ function createSplitFinalCat(v){
   let e = splitsFinalClone.cloneNode(true);
   e.querySelector('.cat-p').innerText = v;
   e.style.display = 'inline-block';
+  if(memCats.hasOwnProperty(v)){
+    e.querySelector('#partialAmount').value = memCats[v].amount==0?'':memCats[v].amount;
+    setInout(e,memCats[v].inflow);
+    e.querySelector('.splitMemo').value = memCats[v].memo;
+    e.querySelector('#_gst').value = memCats[v].gst;
+    setGSTele(e,memCats[v].gst);
+    e.setAttribute('data-value',memCats[v].amount==0?'':memCats[v].amount);
+  }
   return e;
+}
+function setGSTele(t,s){
+  t.setAttribute('data-gst',s);
+  if(t.getAttribute('data-gst')=='true'){
+    t.querySelector('#_gst').style.background = 'cadetblue';
+  }else{
+    t.querySelector('#_gst').style.background = '#ddd';
+  }
+}
+function setInout(e,v){
+  e.setAttribute('data-checked',v);
+  setPlusMinusButtonState(e.querySelector('#_inout'),v);
 }
 function createFinalSplitElements(){
   splitsFinalCont.innerHTML = '';
@@ -171,9 +248,15 @@ function getAm(v){
 }
 function clickSingleCat(t){
   setScreen(0);
-  formdata.categories = [{name:t.querySelector('.cat-p').innerText, amount: getFullAmount()}];
-  document.getElementById('singleCatButton').innerText = formdata.categories[0].name;
-  document.getElementById('splitCatButton').innerText = 'Split ✂️';
+  setSingleCat(t.querySelector('.cat-p').innerText);
+  let g = payees.filter((item) => item.po == formdata.categories[0].name);
+  console.log(g);
+  if(g.length > 0 && formdata.payee === undefined) setPayee(g[0].itm);
+}
+function setSingleCat(text){
+  document.getElementById('singleCatButton').innerText = text;
+  clearSplitButton();
+  formdata.categories = [{name:text, amount: getFullAmount()}];
 }
 function getActiveSplits(){
   let c = document.getElementsByClassName('split-cat');
@@ -210,8 +293,8 @@ function submit(t){
     if(formdata.categories.length == 1){
       formdata.categories[0].amount = getFullAmount();
       formdata.categories[0].inflow = mainInflow;
+      formdata.categories[0].memo = document.getElementById('memo').value;
     }
-    formdata.memo = document.getElementById('memo').value;
     formdata.date = document.getElementById('date').value;
     submitToSheet();
     t.style.display = 'none';
@@ -219,10 +302,11 @@ function submit(t){
 }
 var state = false;
 function submitToSheet(){
-  if(!payees.includes(formdata.payee)){
+  //add a payee if it doesnt exist
+  if(payees.filter((item) => item.itm == formdata.payee).length == 0){
     let insertIndex = payees.length+1;
     for(let i = payees.length-1; i >= 0; i--){
-      if(formdata.payee.toLowerCase() < payees[i].toLowerCase()){
+      if(formdata.payee.toLowerCase() < payees[i].itm.toLowerCase()){
         insertIndex = i+1;
       }
     }
@@ -241,8 +325,7 @@ function submitToSheet(){
     }else{
       inflow = '';
     }
-    trans.push([date,formdata.payee,formdata.categories[i].name,formdata.memo,outflow,inflow]);
-
+    trans.push([date,formdata.payee,formdata.categories[i].name,formdata.categories[i].memo,outflow,inflow]);
   }
   console.log(trans);
   let insertIndex = transactions.length+4;
@@ -253,4 +336,9 @@ function submitToSheet(){
     }
   }
   insertRowAt(insertIndex,trans,1871586694,true);
+  if(formdata.categories.length == 1) for(let i = 0; i < payees.length; i++){
+    if(payees[i].itm == formdata.payee){
+      insertCellsAt('Payees!B'+(i+2),[[formdata.categories[0].name]]);
+    }
+  }
 }

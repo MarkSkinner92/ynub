@@ -52,23 +52,25 @@ function handleSignoutClick(event) {
 function getInitData() {
   gapi.client.sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: 'Categories!A2:A119',
+    range: 'Categories!A2:B',
   }).then(function(response) {
     var range = response.result.values;
     range.forEach((item, i) => {
-      categories.push(item[0]);
+      categories.push({itm:item[0],po:item[1]});
     });
+    generateCategories();
   }, function(response) {
     console.log('error' + response);
   });
   gapi.client.sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: 'Payees!A:A',
+    range: 'Payees!A2:B',
   }).then(function(response) {
     var range = response.result.values;
     range.forEach((item, i) => {
-      payees.push(item[0]);
+      payees.push({itm:item[0],po:item[1]});
     });
+    generatePayees();
   }, function(response) {
     console.log('error' + response);
   });
@@ -136,4 +138,23 @@ function insertRowAt(index,values,sheetIntID,isfinal=false){
    },reason => {
      console.error('error: ' + reason.result.error.message);
    });
+}
+
+function insertCellsAt(range,values){
+ for(let i = 0; i < values.length; i++){
+   var body = {
+     values: values
+   };
+   gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: SHEET_ID,
+      range: range,
+      valueInputOption: 'USER_ENTERED',
+      resource: body
+   }).then((response) => {
+     var result = response.result;
+     console.log(`${result.updatedCells} cells updated.`);
+   },reason => {
+     console.error('error: ' + reason.result.error.message);
+   });
+  }
 }
