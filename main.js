@@ -48,7 +48,6 @@ function setScreen(s){
   switch(s){
     case 0:
     if(getActiveSplits().length == 0){
-      formdata.categories = [];
       clearSplitButton();
     }
     break;
@@ -59,7 +58,6 @@ function setScreen(s){
     break;
     case 4:
       if(getActiveSplits().length == 0){
-        formdata.categories = [];
         clearSplitButton();
         return;
       }
