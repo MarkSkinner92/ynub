@@ -133,6 +133,7 @@ function insertRowAt(index,values,sheetIntID,isfinal=false){
      if(isfinal && state){
        document.getElementById('suc').style.top='0px';
        signoutButton.style.display = 'block';
+       setTimeout(()=>{window.location.reload()},2000);
        state = false;
      }
    },reason => {
