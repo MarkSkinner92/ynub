@@ -27,6 +27,7 @@ let todayDateFormated = (`${today.getFullYear()}-${(today.getMonth()+1).toLocale
   })}`);
 document.getElementById("date").value = todayDateFormated;
 window.screens = [document.getElementById('MainScreen'),document.getElementById('SingleCategory'),document.getElementById('SplitCategories'),document.getElementById('Payees'),document.getElementById('Splits')];
+setRandomTitle();
 function toggleInOut(){
   if(mainInflow){
     setFundOut();
@@ -339,4 +340,10 @@ function submitToSheet(){
       insertCellsAt('Payees!B'+(i+2),[[formdata.categories[0].name]]);
     }
   }
+}
+function setRandomTitle(){
+  const cornyTitles = ['YNUB Personal Finance', 'YNOB Persunel Finunce', 'Personal Fiancee', 'Y. N. U. B', 'Budgetenator 2000', 'SkinnerSellout.com', 'WhyNub?', 'You. Have. A. Budget.', 'Money Money Money', 'Y CLUB', 'WhyNeedABudget?', 'Ynuhb Inc', 'You know you need it', '💰'];
+  const cornyMessages = ['Long time no see.. haha JK lol', 'AlWaYS WaTcHIng', "You still haven't payed me", "I love money", "Merry Christmas", "I'm lovin it", "Now available on DVD", 'OK Boomer', 'You have 3 more free submissions', 'PLEASE clean your fingers before using', "Ignore your credit score", "Don't be a Frugal Flamingo", "Last submission by Zhāng Wěi of China", "Your breakfast was too cheap yesterday", "...You are not a loan!", "It just makes sense", "Borrow money from pessimists, they don’t expect it back", "Nothing is foolproof to a talented fool", "it's a user error", "Why is money called dough? Because we all knead it", "What’s another name for long term investment? A failed short term investment!"];
+  document.getElementById('title').innerHTML = cornyTitles[Math.floor(Math.random() * cornyTitles.length)];
+  document.getElementById('subtitle').innerHTML = cornyMessages[Math.floor(Math.random() * cornyMessages.length)];
 }
